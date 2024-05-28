@@ -10,18 +10,20 @@ files = ['plants_1.csv', 'plants_2.csv', 'plants_3.csv', 'plants_4.csv']
 output_dir = os.path.join(parent_dir, 'plots')
 os.makedirs(output_dir, exist_ok=True)
 
-# Mapping from filenames to labels
+# Mapping from filenames to labels and colors
 label_mapping = {
-    'plants_1.csv': 'Group 1: high frequency, high power',
-    'plants_2.csv': 'Group 2: high frequency, low power',
-    'plants_3.csv': 'Group 3: low frequency, high power',
-    'plants_4.csv': 'Control Group'
+    'plants_1.csv': ('Group 1: high frequency, high power', 'blue'),
+    'plants_2.csv': ('Group 2: high frequency, low power', 'orange'),
+    'plants_3.csv': ('Group 3: low frequency, high power', 'green'),
+    'plants_4.csv': ('Control Group', 'red')
 }
 
-plt.figure(figsize=(10, 6))  # Set the figure size
+# Set up a single figure to contain all subplots
+fig, axs = plt.subplots(2, 2, figsize=(14, 10))
+fig.suptitle('Growth over Time', fontsize=16)
 
 # Iterate through the files and plot their datasets with mean and standard deviation
-for file in files:
+for idx, file in enumerate(files):
     # Read the CSV file into a DataFrame
     df = pd.read_csv(os.path.join(data_dir, file))
     
@@ -35,22 +37,20 @@ for file in files:
     df['mean'] = df[['List 1', 'List 2', 'List 3', 'List 4']].mean(axis=1)
     df['std'] = df[['List 1', 'List 2', 'List 3', 'List 4']].std(axis=1)
 
-    # Plot the mean
-    plt.plot(df['time'], df['mean'], label=label_mapping.get(file, file.split(".")[0]))
+    # Plot the mean and standard deviation
+    row = idx // 2
+    col = idx % 2
+    axs[row, col].plot(df['time'], df['mean'], label=label_mapping[file][0], color=label_mapping[file][1])
+    axs[row, col].fill_between(df['time'], df['mean'] - df['std'], df['mean'] + df['std'], alpha=0.2, color=label_mapping[file][1])
 
-    # Plot the standard deviation as a shaded area
-    plt.fill_between(df['time'], df['mean'] - df['std'], df['mean'] + df['std'], alpha=0.2)
-
-# Add labels and title with units
-plt.xlabel('Time (days)')  # Set the x-axis label with units
-plt.ylabel('Length (cm)')  # Set the y-axis label with units
-plt.title('Growth over Time')  # Set the title
-plt.grid(True)  # Show grid
-
-plt.legend(loc='upper left')  # Show legend on the top left
+    # Set labels and legend for each subplot
+    axs[row, col].set_xlabel('Time (days)')
+    axs[row, col].set_ylabel('Length (cm)')
+    axs[row, col].legend(loc='upper left')
+    axs[row, col].grid(True)
 
 # Adjust layout
-plt.tight_layout()
+plt.tight_layout(rect=[0, 0.03, 1, 0.95])
 
 # Save the plot as an image file
 output_filename = os.path.join(output_dir, 'combined_plots_with_std.png')
