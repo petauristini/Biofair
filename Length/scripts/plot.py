@@ -27,7 +27,7 @@ first_df['time'] = pd.to_datetime(first_df['time'])
 
 # Create the plot with the first dataset
 plt.figure(figsize=(10, 6))  # Set the figure size
-plt.plot(first_df['time'], first_df['length'], label=label_mapping.get(first_file, first_file.split(".")[0]))  # Plot data
+plt.plot(first_df.index + 1, first_df['length'], label=label_mapping.get(first_file, first_file.split(".")[0]))  # Plot data
 
 # Iterate through the remaining files and plot their datasets on the same axes
 for file in files[1:]:
@@ -38,18 +38,20 @@ for file in files[1:]:
     df['time'] = pd.to_datetime(df['time'])
 
     # Plot 'time' vs. 'length' on the same axes
-    plt.plot(df['time'], df['length'], label=label_mapping.get(file, file.split(".")[0]))  # Plot data
+    plt.plot(df.index + 1, df['length'], label=label_mapping.get(file, file.split(".")[0]))  # Plot data
 
-# Add labels and title with units
-plt.xlabel('Time (days)')  # Set the x-axis label with units
-plt.ylabel('Length (cm)')  # Set the y-axis label with units
-plt.title('Growth over Time')  # Set the title
+plt.title('Growth over Time', fontsize=20, y=1.05)  # Set the title with font size and adjusted spacing
 plt.grid(True)  # Show grid
 
-plt.legend()  # Show legend
+plt.legend(fontsize=16)  # Show legend with font size
 
-# Adjust layout
-plt.tight_layout()
+plt.xticks(range(1, len(first_df) + 1, 4), [f'Day {i}' for i in range(1, len(first_df) + 1, 4)], fontsize=13)
+
+# Format y-axis with "cm" after each value and remove decimal point if integer
+plt.gca().yaxis.set_major_formatter(plt.FuncFormatter(lambda x, _: f'{int(x) if x.is_integer() else x:.0f} cm'))
+
+# Set font size for y-axis ticks
+plt.yticks(fontsize=13)
 
 # Save the plot as an image file
 output_filename = os.path.join(output_dir, 'combined_plots.png')
