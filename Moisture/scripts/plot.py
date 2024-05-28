@@ -40,19 +40,23 @@ for file in files[1:]:
     # Plot 'time' vs. 'moisture' on the same axes
     plt.plot(df['time'], df['moisture'], label=label_mapping.get(file, file.split(".")[0]))  # Plot data
 
-# Add labels and title with units
-plt.xlabel('Time (days)')  # Set the x-axis label with units
-plt.ylabel('Moisture (%)')  # Set the y-axis label with units
-plt.title('Moisture over Time')  # Set the title
+plt.title('Moisture over Time', fontsize=20, pad=20)  # Set the title with additional spacing
 plt.grid(True)  # Show grid
 
 # Set y-axis limits
 plt.ylim(35, 95)
 
-plt.legend()  # Show legend
+# Set x-axis ticks
+plt.xticks(plt.xticks()[0], [f'Day {i+1}' for i in range(len(plt.xticks()[0]))], fontsize=13)
+
+# Add '%' to y-axis ticks
+plt.gca().set_yticklabels([f'{int(x)}%' for x in plt.gca().get_yticks()], fontsize=13)
+
+plt.legend(fontsize=16)  # Show legend
 
 # Adjust layout
-plt.tight_layout()
+plt.tight_layout(pad=2)  # Add even spacing around the graph
+plt.subplots_adjust(top=0.9)  # Add spacing around the title
 
 # Save the plot as an image file
 output_filename = os.path.join(output_dir, 'combined_plots.png')
