@@ -37,12 +37,12 @@ for file in files[1:]:
     # Convert 'time' column to datetime format
     df['time'] = pd.to_datetime(df['time'])
 
-    # Plot 'time' vs. 'moisture' on the same axes
+    # Plot 'time' vs. 'length' on the same axes
     plt.plot(df['time'], df['length'], label=label_mapping.get(file, file.split(".")[0]))  # Plot data
 
-# Add labels and title
-plt.xlabel('Time')  # Set the x-axis label
-plt.ylabel('Length')  # Set the y-axis label
+# Add labels and title with units
+plt.xlabel('Time (days)')  # Set the x-axis label with units
+plt.ylabel('Length (cm)')  # Set the y-axis label with units
 plt.title('Growth over Time')  # Set the title
 plt.grid(True)  # Show grid
 

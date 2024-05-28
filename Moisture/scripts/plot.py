@@ -40,9 +40,9 @@ for file in files[1:]:
     # Plot 'time' vs. 'moisture' on the same axes
     plt.plot(df['time'], df['moisture'], label=label_mapping.get(file, file.split(".")[0]))  # Plot data
 
-# Add labels and title
-plt.xlabel('Time')  # Set the x-axis label
-plt.ylabel('Moisture')  # Set the y-axis label
+# Add labels and title with units
+plt.xlabel('Time (days)')  # Set the x-axis label with units
+plt.ylabel('Moisture (%)')  # Set the y-axis label with units
 plt.title('Moisture over Time')  # Set the title
 plt.grid(True)  # Show grid
 
